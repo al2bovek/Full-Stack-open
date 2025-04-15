@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import axios from 'axios';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
@@ -10,10 +11,21 @@ const App = () => {
     { name: 'University of Oulu', phone: '+358 (0) 294 48 0000'},
     { name: 'Aalto University', phone: '+358 (0) 9 47001'}
   ]);
+
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [searchName, setSearchName] = useState('');
 
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
+  console.log(persons)
 
   const addNewEntry = event => {
     event.preventDefault();

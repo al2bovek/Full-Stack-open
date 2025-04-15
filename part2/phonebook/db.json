@@ -1,0 +1,8 @@
+ {
+    "persons":[
+        { "name": "University of Helsinki", "phone": "+358 (0) 2941 911"},
+        { "name": "University of Jyväskylä", "phone": "+358 (0) 14 260 1211"},
+        { "name": "University of Oulu", "phone": "+358 (0) 294 48 0000"},
+        { "name": "Aalto University", "phone": "+358 (0) 9 47001"}
+    ]
+ }
