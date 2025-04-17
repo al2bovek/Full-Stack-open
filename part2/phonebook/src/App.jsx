@@ -19,7 +19,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [searchName, setSearchName] = useState('');
-  // const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('');
 
   // useEffect(() => {
   //   axios
@@ -41,14 +41,40 @@ const App = () => {
       alert("Name or phone number field is empty.");
       return;
     }
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already in the phonebook.`);
-      return;
+
+    const existingPerson = persons.find(person => person.name === newName);
+
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already in the phonebook. Do you want to update their number?`)) {
+        const updatedPerson = { ...existingPerson, phone: newPhone };
+
+        postService.update(existingPerson.id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person =>
+              person.id !== existingPerson.id ? person : returnedPerson
+            ));
+            setMessage(`Updated ${newName}'s phone number.`);
+            setTimeout(() => setMessage(''), 3000);
+            setNewName('');
+            setNewPhone('');
+          })
+          .catch(error => {
+            console.error("Failed to update person:", error);
+            alert("Failed to update phone number. Please try again.");
+          });
+
+        return;
+      }
     }
-    if (persons.some(person => person.phone === newPhone)) {
-      alert(`Phone number ${newPhone} is already in the phonebook.`);
-      return;
-    }
+
+    // if (persons.some(person => person.name === newName)) {
+    //   alert(`${newName} is already in the phonebook.`);
+    //   return;
+    // }
+    // if (persons.some(person => person.phone === newPhone)) {
+    //   alert(`Phone number ${newPhone} is already in the phonebook.`);
+    //   return;
+    // }
 
     const newPerson = { name: newName.trim(), phone: newPhone.trim() };
     console.log("Adding:", newPerson);
@@ -56,6 +82,8 @@ const App = () => {
     postService.create(newPerson)
       .then(person => {
         setPersons([...persons, person]);
+        setMessage(`Added ${newName} successfully.`);
+        setTimeout(() => setMessage(''), 3000);
         setNewName('');
         setNewPhone('');
       })
@@ -129,7 +157,7 @@ const App = () => {
         handleNewPhoneAdd={handleNewPhoneAdd}
       />
       <h3>Numbers</h3>
-      {/* {message && <div style={{ color: 'green'}}>{message}</div>} */}
+      {message && <div style={{ color: 'green'}}>{message}</div>}
       <ToastContainer />
 
       <Persons persons={persons} onDelete={deletePerson} />
