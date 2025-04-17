@@ -33,7 +33,7 @@ const App = () => {
     postService.getAll().then(initialPersons => setPersons(initialPersons));
   }, []);
 
-  console.log(persons)
+  console.log(persons);
 
   const addNewEntry = event => {
     event.preventDefault();
@@ -89,7 +89,7 @@ const App = () => {
       })
       .catch(error => {
         console.error("Failed to add person:", error.response?.data || error.message);
-        alert("Failed to add person. Please try again.");
+        alert("Network Error. Failed to add person. Please try npm run server.");
       });
 
     // axios.post('http://localhost:3001/persons', newPerson)
@@ -132,7 +132,8 @@ const App = () => {
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
-          draggable: true
+          draggable: true,
+          style: { color: "red" },
         });
         // setMessage(`${personToDelete.name} was deleted successfully.`);
         // setTimeout(() => setMessage(''), 3000);
@@ -144,7 +145,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className='shell'>
       <h2>Phonebook</h2>
       <Filter searchName={searchName} handleSearchName={handleSearchName} />
       {searchName && <Persons persons={filteredPersons} onDelete={deletePerson} />}
@@ -157,7 +158,7 @@ const App = () => {
         handleNewPhoneAdd={handleNewPhoneAdd}
       />
       <h3>Numbers</h3>
-      {message && <div style={{ color: 'green'}}>{message}</div>}
+      {message && <div className='message' style={{ color: 'green'}}>{message}</div>}
       <ToastContainer />
 
       <Persons persons={persons} onDelete={deletePerson} />

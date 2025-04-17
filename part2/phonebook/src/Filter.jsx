@@ -1,6 +1,6 @@
 const Filter = ({ searchName, handleSearchName }) => {
     return (
-        <div>
+        <div className="filter">
             filter shown with: 
             <input 
                 type="text" 
