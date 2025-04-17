@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // import axios from 'axios';
 import postService from './postService.js';
 import Filter from './Filter';
@@ -16,7 +19,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [searchName, setSearchName] = useState('');
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
+
   // useEffect(() => {
   //   axios
   //     .get('http://localhost:3001/persons')
@@ -94,8 +98,16 @@ const App = () => {
     postService.remove(id)
       .then(() => {
         setPersons(persons.filter(person => person.id !== id));
-        setMessage(`${personToDelete.name} was deleted successfully.`);
-        setTimeout(() => setMessage(''), 3000);
+        toast.success(`${personToDelete.name} was deleted successfully.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
+        // setMessage(`${personToDelete.name} was deleted successfully.`);
+        // setTimeout(() => setMessage(''), 3000);
       })
       .catch(error => {
         console.error("Failed to delete person:", error);
@@ -117,7 +129,8 @@ const App = () => {
         handleNewPhoneAdd={handleNewPhoneAdd}
       />
       <h3>Numbers</h3>
-      {message && <div style={{ color: 'green'}}>{message}</div>}
+      {/* {message && <div style={{ color: 'green'}}>{message}</div>} */}
+      <ToastContainer />
 
       <Persons persons={persons} onDelete={deletePerson} />
     </div>
