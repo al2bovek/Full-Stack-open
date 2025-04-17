@@ -9,7 +9,7 @@ const create = newPerson =>
     .then(response => response.data)
     .catch(error => {
       console.error("API error:", error);
-      return Promise.reject(error); // Ensures error handling in App.js
+      return Promise.reject(error);
     });
 
 const update = (id, updatedPerson) =>

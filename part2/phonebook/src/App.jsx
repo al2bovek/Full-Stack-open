@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 // import axios from 'axios';
-
 import postService from './postService.js';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
@@ -17,7 +16,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [searchName, setSearchName] = useState('');
-
+  const [message, setMessage] = useState('');
   // useEffect(() => {
   //   axios
   //     .get('http://localhost:3001/persons')
@@ -60,8 +59,6 @@ const App = () => {
         console.error("Failed to add person:", error.response?.data || error.message);
         alert("Failed to add person. Please try again.");
       });
-      
-
 
     // axios.post('http://localhost:3001/persons', newPerson)
     //   .then(response => {
@@ -91,12 +88,26 @@ const App = () => {
     person.name.toLowerCase().includes(searchName.toLowerCase())
   );
 
+  const deletePerson = id => {
+    const personToDelete = persons.find(person => person.id === id);
+
+    postService.remove(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+        setMessage(`${personToDelete.name} was deleted successfully.`);
+        setTimeout(() => setMessage(''), 3000);
+      })
+      .catch(error => {
+        console.error("Failed to delete person:", error);
+        alert("Failed to delete person. Please try again.");
+      });
+  };
 
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter searchName={searchName} handleSearchName={handleSearchName} />
-      {searchName && <Persons persons={filteredPersons} />}
+      {searchName && <Persons persons={filteredPersons} onDelete={deletePerson} />}
       <h3>Add a new</h3>
       <PersonForm
         addNewEntry={addNewEntry}
@@ -106,7 +117,9 @@ const App = () => {
         handleNewPhoneAdd={handleNewPhoneAdd}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} />
+      {message && <div style={{ color: 'green'}}>{message}</div>}
+
+      <Persons persons={persons} onDelete={deletePerson} />
     </div>
   );
 };
