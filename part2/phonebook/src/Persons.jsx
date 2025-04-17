@@ -3,14 +3,16 @@ const Persons = ({ persons, onDelete }) => {
     <ul>
       {persons.map((person, i) => (
         <li key={i}>
-          {person.name} {person.phone}
-          <button onClick={() => {
+           <button style={{margin:'0.2em', color:'red'}} onClick={() => {
             if (window.confirm(`Delete ${person.name}?`)) {
               onDelete(person.id);
             }
           }}>
-            Delete
+            Delete it
           </button>
+          <span style={{color:'transparent'}}>...</span>
+          {person.name} {person.phone}
+          <span style={{color:'transparent'}}>...</span>
         </li>
       ))}
     </ul>
