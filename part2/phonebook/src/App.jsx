@@ -17,11 +17,9 @@ const App = () => {
   const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
-    console.log('effect')
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        console.log('promise fulfilled')
         setPersons(response.data)
       })
   }, [])
@@ -32,25 +30,22 @@ const App = () => {
     if (!newName || !newPhone) {
       alert("Name or phone number field is empty.");
       return;
-    } else if (persons.some(person => person.name === newName)) {
+    }
+    if (persons.some(person => person.name === newName)) {
       alert(`${newName} is already in the phonebook.`);
       return;
-    } else if (persons.some(person => person.phone === newPhone)) {
+    }
+    if (persons.some(person => person.phone === newPhone)) {
       alert(`Phone number ${newPhone} is already in the phonebook.`);
       return;
-    } else {
-      // setPersons([...persons, { name: newName, phone: newPhone }]);
-      // setNewName('');
-      // setNewPhone('');
-    }
-
+    } 
 
     const newPerson = { name: newName, phone: newPhone };
     console.log("Adding:", newPerson);
 
     axios.post('http://localhost:3001/persons', newPerson)
       .then(response => {
-        setPersons([...persons, response.data]); // Update state with backend response
+        setPersons([...persons, response.data]);
         setNewName('');
         setNewPhone('');
       })
