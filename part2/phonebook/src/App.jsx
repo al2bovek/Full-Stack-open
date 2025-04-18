@@ -15,7 +15,7 @@ const App = () => {
     { name: 'University of Oulu', phone: '+358 (0) 294 48 0000' },
     { name: 'Aalto University', phone: '+358 (0) 9 47001' }
   ]);
-
+  const [deletedPersons, setDeletedPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [searchName, setSearchName] = useState('');
@@ -33,7 +33,7 @@ const App = () => {
     postService.getAll().then(initialPersons => setPersons(initialPersons));
   }, []);
 
-  console.log(persons);
+  // console.log(persons);
 
   const addNewEntry = event => {
     event.preventDefault();
@@ -83,7 +83,7 @@ const App = () => {
       .then(person => {
         setPersons([...persons, person]);
         setMessage(`Added ${newName} successfully.`);
-        setTimeout(() => setMessage(''), 3000);
+        setTimeout(() => setMessage(''), 2000);
         setNewName('');
         setNewPhone('');
       })
@@ -120,12 +120,14 @@ const App = () => {
     person.name.toLowerCase().includes(searchName.toLowerCase())
   );
 
+
   const deletePerson = id => {
     const personToDelete = persons.find(person => person.id === id);
 
     postService.remove(id)
       .then(() => {
         setPersons(persons.filter(person => person.id !== id));
+        setDeletedPersons([...deletedPersons, personToDelete]);
         toast.success(`${personToDelete.name} was deleted successfully.`, {
           position: "top-center",
           autoClose: 2000,
@@ -133,7 +135,10 @@ const App = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          style: { color: "red" },
+          style: {
+            color: "red",
+            marginTop: '55%',
+          },
         });
         // setMessage(`${personToDelete.name} was deleted successfully.`);
         // setTimeout(() => setMessage(''), 3000);
@@ -144,8 +149,40 @@ const App = () => {
       });
   };
 
+  const restorePerson = person => {
+    postService.create(person)
+      .then(returnedPerson => {
+        setPersons([...persons, returnedPerson]);
+        setDeletedPersons(deletedPersons.filter(p => p.id !== person.id));
+        toast.success(`${person.name} restored!`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          style: {
+            color: "green",
+            marginTop: '55%',
+          },
+        });
+      })
+      .catch(error => {
+        console.error("Failed to restore person:", error);
+        alert("Failed to restore person.");
+      });
+  };
+
+  const removeFromDeletedList = id => {
+    setDeletedPersons(deletedPersons.filter(person => person.id !== id));
+  };
+
+// console.log(deletedPersons);
+
   return (
     <div className='shell'>
+      <ToastContainer />
+
       <h2>Phonebook</h2>
       <Filter searchName={searchName} handleSearchName={handleSearchName} />
       {searchName && <Persons persons={filteredPersons} onDelete={deletePerson} />}
@@ -158,10 +195,28 @@ const App = () => {
         handleNewPhoneAdd={handleNewPhoneAdd}
       />
       <h3>Numbers</h3>
-      {message && <div className='message' style={{ color: 'green'}}>{message}</div>}
-      <ToastContainer />
+      {message && <div className='message' style={{ color: 'green' }}>{message}</div>}
+      {/* <ToastContainer /> */}
 
       <Persons persons={persons} onDelete={deletePerson} />
+      {deletedPersons.length > 0 && (
+        <div className='restore'>
+          <h3>Restore</h3>
+          <ul>
+            {deletedPersons.map(person => (
+              <li key={person.id}>
+                <button className='restore_button' onClick={() => restorePerson(person)}>Restore</button>
+                <span style={{ color: 'transparent' }}>...</span>
+                {person.name} {person.phone}
+                <span style={{ color: 'transparent' }}>...</span>
+                <button className='nope' onClick={() => removeFromDeletedList(person.id)} style={{ color: 'red' }}>
+                  Nope
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

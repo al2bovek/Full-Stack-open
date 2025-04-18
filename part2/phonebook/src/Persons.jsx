@@ -8,7 +8,7 @@ const Persons = ({ persons, onDelete }) => {
               onDelete(person.id);
             }
           }}>
-            Delete it
+            Delete
           </button>
           <span style={{color:'transparent'}}>...</span>
           {person.name} {person.phone}

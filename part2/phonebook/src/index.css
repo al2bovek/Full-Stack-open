@@ -1,34 +1,54 @@
 body {
-    background-color: rgb(214, 213, 210);
-
+  background-color: rgb(214, 213, 210);
+  width: 80%;
+  margin: 2em auto;
+  ;
 }
+
 .shell {
-    padding: 1em;
-    background-color: rgb(235, 233, 230);
+  padding: 1em;
+  background-color: rgb(235, 233, 230);
 }
 
-h2, h3, .filter{
-    text-align: center;
+h2,
+h3,
+.filter {
+  text-align: center;
 }
 
 .message {
-    color: red;
-    background: lightgrey;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
 
-  form {
-    margin-left: 3em;
-  }
+form , .add{
+  margin-left: 8em;
+}
 
-  form div {
-    margin: 0.3em;
-  }
+form div {
+  margin: 0.3em;
+}
 
-  .add {
-    color: darkgreen;
-  }
+.add {
+  color: darkgreen;
+}
+
+ul {
+  list-style: none;
+}
+
+.restore ul li{
+  display: flex;
+  justify-content: space-between;
+}
+
+.restore_button, .nope{
+  margin: 0.2em;
+  color: darkred;
+}
+
