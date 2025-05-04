@@ -1,18 +1,18 @@
 import express from 'express';
+import morgan from 'morgan';
 import { persons } from './api.js';
 
 const app = express();
-
 app.use(express.json());
+app.use(morgan('tiny'));
+
+
 
 app.get('/info', (request, response) => {
   response.send(`<div style="text-align:center"><h2>Phonebook has info for ${persons.length} people</h2>
     <p>${new Date()}</p></div>`
   )
 })
-
-app.get('/api/persons', (request, response) => { response.json(persons)});
-
 
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id;
@@ -31,6 +31,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 });
 
+
 app.post('/api/persons', (request, response) => {
   const { name, number } = request.body;
   if (!name || !number) {
@@ -39,9 +40,13 @@ app.post('/api/persons', (request, response) => {
   if (persons.some(person => person.name === name)) {
     return response.status(409).json({ error: 'Name must be unique' });
   }
+
   const id = Math.floor(Math.random() * 10000);
   const newPerson = { id, name, number };
   persons.push(newPerson);
+
+  console.log(`POST /api/persons 200 ${request.method} ${request.url} {name: '${name}', number: '${number}'}`);
+
   response.status(201).json(newPerson);
 });
 
